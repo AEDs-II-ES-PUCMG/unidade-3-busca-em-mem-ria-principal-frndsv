@@ -4,12 +4,14 @@ public class No<K, V> {
 	private V item;        // contém os dados do item armazenado no nodo da árvore.
 	private No<K, V> direita;    // referência ao nodo armazenado, na árvore, à direita do nó em questão.
 	private No<K, V> esquerda;   // referência ao nodo armazenado, na árvore, à esquerda do nó em questão.
+	private int altura;
 	
 	public No(K chave, V item) {
 		setChave(chave);
 		setItem(item);
 	    setDireita(null);
 	    setEsquerda(null);
+	    altura = 0;
 	}
 
 	public V getItem() {
@@ -43,4 +45,49 @@ public class No<K, V> {
 	public void setEsquerda(No<K, V> esquerda) {
 		this.esquerda = esquerda;
 	}
+	
+	public int grau(){
+		int resposta = -1;
+		if(esquerda==null){
+			if(direita==null)
+				resposta = 0;
+			else 
+				resposta = 1;
+		}
+		else if (direita !=null)
+				resposta = 2;
+		return resposta;
+	}
+	
+	private int getAltura(No<K, V> no) {
+		
+		if (no != null)
+			return no.getAltura();
+		else
+			return -1;
+	}
+	
+	public int getAltura() {
+		return this.altura;
+	}
+
+	public void setAltura() {
+		
+		int alturaEsquerda, alturaDireita;
+		
+		alturaEsquerda = getAltura(esquerda);
+		alturaDireita = getAltura(direita);
+		
+		altura = Math.max(alturaEsquerda, alturaDireita) + 1;
+	}
+	
+	public int getFatorBalanceamento() {
+		
+		int alturaEsquerda, alturaDireita;
+		
+		alturaEsquerda = getAltura(esquerda);
+		alturaDireita = getAltura(direita);
+		
+		return (alturaEsquerda - alturaDireita);
+	}	
 }
