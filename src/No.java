@@ -46,19 +46,6 @@ public class No<K, V> {
 		this.esquerda = esquerda;
 	}
 	
-	public int grau(){
-		int resposta = -1;
-		if(esquerda==null){
-			if(direita==null)
-				resposta = 0;
-			else 
-				resposta = 1;
-		}
-		else if (direita !=null)
-				resposta = 2;
-		return resposta;
-	}
-	
 	private int getAltura(No<K, V> no) {
 		
 		if (no != null)
