@@ -226,7 +226,6 @@ public class App {
 
     
     private static void mostrarProduto(Produto produto) {
-    	
         cabecalho();
         StringBuilder  mensagem = new StringBuilder("Produto não encontrado.\n");
         
@@ -285,7 +284,6 @@ public class App {
          Produto localizado =  produtosCadastrados.remover(chave);
          return localizado;
     }
-
     
     static Cliente removerClienteId(AVL <Integer, Cliente> clientesPorId) {
         cabecalho();
@@ -312,8 +310,6 @@ public class App {
         return localizado;
     }
 
-
-    
     private static <K> void recortarProduto(ABB<K, Produto> produtosCadastrados, K deOnde, K ateOnde) {
     	cabecalho();
     	System.out.println(produtosCadastrados.recortar(deOnde, ateOnde).toString());
@@ -331,8 +327,7 @@ public class App {
         recortarProduto(produtosCadastrados, descricaoDeOnde, descricaoAteOnde);
      }
      
-    private static void recortarProdutosId(ABB<Integer, Produto> produtosCadastrados) {
-     	
+    private static void recortarProdutosId(ABB<Integer, Produto> produtosCadastrados) {  	
     	cabecalho();
         int idDeOnde = lerOpcao("Digite o id do primeiro produto do filtro", Integer.class);
         int idAteOnde = lerOpcao("Digite o id do último produto do filtro", Integer.class);
@@ -349,27 +344,38 @@ public class App {
         Cliente cliente;
 
         for (int i = 0; i < quantidade; i++) {
+            // sorteia a forma de pagamento (1 ou 2)
         	formaDePagamento = sorteio.nextInt(2) + 1;
 
-        	// Sorteie um documento de cliente (use sorteio.nextInt(quantosClientes) + 10_000)
+        	// Sorteie um documento de cliente (usa sorteio.nextInt(quantosClientes) + 10_000)
         	// e localize o cliente correspondente em clientesPorId.
             idCliente = sorteio.nextInt(quantosClientes) + 10_000;
             cliente = clientesPorId.pesquisar(idCliente);
 
+            // cria um novo pedido associado ao cliente sorteado
         	Pedido pedido = new Pedido(LocalDate.now(), formaDePagamento, cliente);
+            // sorteia quantos produtos diferentes esse pedido terá (entre 1 e 8)
             quantProdutos = sorteio.nextInt(8) + 1;
             for (int j = 0; j < quantProdutos; j++) {
+                // sorteia o identificador de um produto
                 int id = sorteio.nextInt(7750) + 10_000;
-                Produto produto = produtosCadastradosPorId.pesquisar(id);
+                // pesquisa o produto pelo id sorteado
+                Produto produto = produtosCadastradosPorId.pesquisar(id); 
+                // sorteia a quantidade desse produto no pedido
                 quant = sorteio.nextInt(10) + 1;
+                // inclui o produto no pedido
                 pedido.incluirProduto(produto, quant);
+                // associa o produto ao pedido na tabela hash, mantendo a lista de pedidos em que esse produto aparece
                 inserirNaTabela(produto, pedido);
             }
+            // insere o pedido na lista
             pedidos.inserir(pedido);
 
-            // chamando inserirNaTabelaPedidosDoCliente(cliente, pedido).
+            // associa o pedido ao cliente, registrando-o no histórico de compras desse cliente
             inserirNaTabelaPedidosDoCliente(cliente, pedido);
         }
+        
+        // retorna a lista contendo todos os pedidos gerados
         return pedidos;
     }
 
@@ -382,28 +388,47 @@ public class App {
         Lista<Pedido> pedidosDoCliente;
 
         try {
+            // procura na tabela de pedidos (pedidos por cliente) a lista de pedidos do cliente passado 
             pedidosDoCliente = pedidosPorCliente.pesquisar(cliente);
         } catch (NoSuchElementException e) {
+            // se nao existe alguma lista de pedidos referente ao cliente
+            // cria uma nova lista
             pedidosDoCliente = new Lista<>();
+            // insere na tabela uma nova lista para esse cliente
             pedidosPorCliente.inserir(cliente, pedidosDoCliente);
         }
 
+        // se tiver lista, insere na lista do cliente o pedido.
         pedidosDoCliente.inserir(pedido);
     }
     
+    /**
+     * Associa, na tabela hash pedidosPorProduto, o pedido informado ao historico de pedidos em que o produto aparece.
+     * Caso o produto ainda não apareca em nenhum pedido, um novo deve ser criado.
+     */
     private static void inserirNaTabela(Produto produto, Pedido pedido) {
         
     	Lista<Pedido> pedidosDoProduto;
     	
     	try {
+            // procura na tabela de pedidos (pedidos por produto) a lista de pedidos que aquele produto se encontra
     		pedidosDoProduto = pedidosPorProduto.pesquisar(produto);
     	} catch (NoSuchElementException excecao) {
+            // se nao existe alguma lista de pedidos em que aquele produto aparece
+            // cria uma nova lista
     		pedidosDoProduto = new Lista<>();
+            // insere na tabela uma nova lista de pedidos em que aquele produto se encontra
     		pedidosPorProduto.inserir(produto, pedidosDoProduto);
     	}
+
+        // adiciona o pedido à lista de pedidos em que esse produto aparece
     	pedidosDoProduto.inserir(pedido);
     }
     
+    /**
+     * Lê o identificador de um produto informado pelo usuário, localiza o produto correspondente
+     * e gera um arquivo com os pedidos em que o produto aparece 
+     */
     private static void pedidosDoProduto() {
     	
     	Lista<Pedido> pedidosDoProduto;
