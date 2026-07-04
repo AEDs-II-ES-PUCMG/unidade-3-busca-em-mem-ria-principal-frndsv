@@ -3,4 +3,5 @@ Oficinas e atividade pontuada realizada em AEDs II, tendo em vista estruturas de
 
 ## Aluno 
 
-* Nome completo do aluno 1
+* Gustavo Leonardi
+* Sofia Fernandes 

@@ -194,6 +194,8 @@ public class TabelaHash<K, V> implements IMapeamento<K,V> {
 	public double getTempo() {
 		return tempoExecucao;	
 	}
+
+	
 	//#endregion
 
 	//#endregion

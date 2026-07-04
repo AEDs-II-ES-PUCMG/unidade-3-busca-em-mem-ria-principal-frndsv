@@ -161,6 +161,10 @@ public class Pedido implements Comparable<Pedido> {
     public int hashCode(){
         return idPedido;
     }
+
+	public Cliente getCliente() {
+		return cliente;
+	}
 	
 	/**
      * Igualdade de pedidos: caso possuam o mesmo código. 

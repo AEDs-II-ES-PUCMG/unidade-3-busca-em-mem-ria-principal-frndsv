@@ -285,6 +285,10 @@ public class Lista<E> implements IMedicao {
 		return tamanho;
 	}
 
+	public Celula getPrimeiro() {
+		return primeiro;
+	}
+
 	@Override
 	public long getComparacoes() {
 		return comparacoes;
